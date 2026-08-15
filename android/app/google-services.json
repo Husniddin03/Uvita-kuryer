@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "333203316555",
+    "project_id": "uvita-courier",
+    "storage_bucket": "uvita-courier.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333203316555:android:e06bfea5aa739f939192ce",
+        "android_client_info": {
+          "package_name": "uz.uvita.courier"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj5f4Ucgqt22qOtpRwfiHTBpkj6RdvuLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
