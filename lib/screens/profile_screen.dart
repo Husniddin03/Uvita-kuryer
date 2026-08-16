@@ -171,8 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           itemBuilder: (context, i) {
                             final t = tickets[i];
                             final status = (t['status'] ?? 'open') as String;
-                            final isResolved = status == 'resolved' ||
-                                status == 'closed';
+                            final isResolved =
+                                status == 'resolved' || status == 'closed';
                             return Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
@@ -181,7 +181,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 border: Border.all(
                                   color: isResolved
                                       ? AppColors.success.withValues(alpha: 0.3)
-                                      : AppColors.warning.withValues(alpha: 0.3),
+                                      : AppColors.warning
+                                          .withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Column(
@@ -200,7 +201,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                       Text(
-                                        isResolved ? 'Hal qilindi' : 'Jarayonda',
+                                        isResolved
+                                            ? 'Hal qilindi'
+                                            : 'Jarayonda',
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w700,
@@ -350,11 +353,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _editProfile() async {
     final auth = context.read<AuthProvider>();
     final cur = auth.profile;
-    final nameCtrl =
-        TextEditingController(text: cur?.name ?? '');
+    final nameCtrl = TextEditingController(text: cur?.name ?? '');
     final phoneCtrl = TextEditingController(text: cur?.phone ?? '');
     final vehicleNumCtrl =
         TextEditingController(text: cur?.vehicleNumber ?? '');
+    final capacityCtrl = TextEditingController(
+        text: (cur?.vehicleCapacityKg ?? 1000).toStringAsFixed(0));
+    final maxOrdersCtrl =
+        TextEditingController(text: '${cur?.maxOrdersPerTrip ?? 10}');
     final vehicleType = ValueNotifier<String>(
         cur?.vehicleType.isNotEmpty == true ? cur!.vehicleType : 'car');
     final saving = ValueNotifier<bool>(false);
@@ -362,125 +368,165 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 16,
-          bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 36,
-              height: 5,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.outlineVariant.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(3),
+      builder: (ctx) => SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 16,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 36,
+                height: 5,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.outlineVariant.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Profilni tahrirlash',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textMain,
+              const SizedBox(height: 16),
+              const Text(
+                'Profilni tahrirlash',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMain,
+                ),
               ),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: nameCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Ism',
-                hintText: 'Ismingiz',
+              const SizedBox(height: 14),
+              TextField(
+                controller: nameCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Ism',
+                  hintText: 'Ismingiz',
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: phoneCtrl,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: 'Telefon',
-                hintText: '+998901234567',
+              const SizedBox(height: 12),
+              TextField(
+                controller: phoneCtrl,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  labelText: 'Telefon',
+                  hintText: '+998901234567',
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            ValueListenableBuilder<String>(
-              valueListenable: vehicleType,
-              builder: (context, vt, _) => DropdownButtonFormField<String>(
-                initialValue: vt,
-                decoration: const InputDecoration(labelText: 'Transport'),
-                items: const [
-                  DropdownMenuItem(value: 'foot', child: Text('Piyoda')),
-                  DropdownMenuItem(value: 'bicycle', child: Text('Velosiped')),
-                  DropdownMenuItem(
-                      value: 'motorcycle', child: Text('Mototsikl')),
-                  DropdownMenuItem(value: 'car', child: Text('Avtomobil')),
-                ],
-                onChanged: (v) {
-                  if (v != null) vehicleType.value = v;
-                },
+              const SizedBox(height: 12),
+              ValueListenableBuilder<String>(
+                valueListenable: vehicleType,
+                builder: (context, vt, _) => DropdownButtonFormField<String>(
+                  initialValue: vt,
+                  decoration: const InputDecoration(labelText: 'Transport'),
+                  items: const [
+                    DropdownMenuItem(value: 'foot', child: Text('Piyoda')),
+                    DropdownMenuItem(
+                        value: 'bicycle', child: Text('Velosiped')),
+                    DropdownMenuItem(
+                        value: 'motorcycle', child: Text('Mototsikl')),
+                    DropdownMenuItem(value: 'car', child: Text('Avtomobil')),
+                  ],
+                  onChanged: (v) {
+                    if (v != null) vehicleType.value = v;
+                  },
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: vehicleNumCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Transport raqami',
-                hintText: 'Masalan: 01 A 123 BC',
+              const SizedBox(height: 12),
+              TextField(
+                controller: vehicleNumCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Transport raqami',
+                  hintText: 'Masalan: 01 A 123 BC',
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            ValueListenableBuilder<bool>(
-              valueListenable: saving,
-              builder: (context, isSaving, _) => FilledButton(
-                onPressed: isSaving
-                    ? null
-                    : () async {
-                        saving.value = true;
-                        try {
-                          final updated = await OrderService.updateProfile(
-                            name: nameCtrl.text.trim(),
-                            phone: phoneCtrl.text.trim(),
-                            vehicleType: vehicleType.value,
-                            vehicleNumber: vehicleNumCtrl.text.trim(),
-                          );
-                          if (!context.mounted) return;
-                          context.read<AuthProvider>().updateProfile(updated);
-                          if (ctx.mounted) Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Profil yangilandi')),
-                          );
-                        } catch (e) {
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        } finally {
-                          saving.value = false;
-                        }
-                      },
-                child: isSaving
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2.5, color: Colors.white),
-                      )
-                    : const Text('Saqlash'),
+              const SizedBox(height: 12),
+              Row(children: [
+                Expanded(
+                  child: TextField(
+                    controller: capacityCtrl,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Yuk sig‘imi (kg)',
+                      hintText: '1000',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: maxOrdersCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Zakaz limiti',
+                      hintText: '10',
+                    ),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 6),
+              const Text(
+                'Tizim reys yukini shu sig‘im va zakaz limitidan oshirmaydi.',
+                style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              ValueListenableBuilder<bool>(
+                valueListenable: saving,
+                builder: (context, isSaving, _) => FilledButton(
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          saving.value = true;
+                          try {
+                            final updated = await OrderService.updateProfile(
+                              name: nameCtrl.text.trim(),
+                              phone: phoneCtrl.text.trim(),
+                              vehicleType: vehicleType.value,
+                              vehicleNumber: vehicleNumCtrl.text.trim(),
+                              vehicleCapacityKg:
+                                  double.tryParse(capacityCtrl.text.trim()),
+                              maxOrdersPerTrip:
+                                  int.tryParse(maxOrdersCtrl.text.trim()),
+                            );
+                            if (!context.mounted) return;
+                            context.read<AuthProvider>().updateProfile(updated);
+                            if (ctx.mounted) Navigator.pop(ctx);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Profil yangilandi')),
+                            );
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          } finally {
+                            saving.value = false;
+                          }
+                        },
+                  child: isSaving
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2.5, color: Colors.white),
+                        )
+                      : const Text('Saqlash'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
     nameCtrl.dispose();
     phoneCtrl.dispose();
     vehicleNumCtrl.dispose();
+    capacityCtrl.dispose();
+    maxOrdersCtrl.dispose();
     vehicleType.dispose();
     saving.dispose();
   }
@@ -541,7 +587,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (url == null) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Noto\'g\'ri manzil. Qayta urinib ko\'ring.')),
+        const SnackBar(
+            content: Text('Noto\'g\'ri manzil. Qayta urinib ko\'ring.')),
       );
       return;
     }
@@ -826,7 +873,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.volume_up_outlined,
                     iconBg: AppColors.successBg,
                     iconColor: AppColors.success,
-                    label: provider.soundOn ? 'Ovoz yoqilgan' : 'Ovoz o\'chirilgan',
+                    label: provider.soundOn
+                        ? 'Ovoz yoqilgan'
+                        : 'Ovoz o\'chirilgan',
                     onTap: () => context.read<OrderProvider>().toggleSound(),
                     showDivider: true,
                   ),

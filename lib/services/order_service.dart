@@ -23,7 +23,8 @@ class OrderService {
   static Future<CourierStats> getStats() async {
     final res = await ApiClient.instance.get('/courier/stats');
     final data = res['data'] ?? res;
-    return CourierStats.fromJson(data is Map ? data as Map<String, dynamic> : {});
+    return CourierStats.fromJson(
+        data is Map ? data as Map<String, dynamic> : {});
   }
 
   /// Daromad: `/api/courier/earnings`
@@ -53,7 +54,8 @@ class OrderService {
   static Future<CourierProfile> getProfile() async {
     final res = await ApiClient.instance.get('/courier/profile');
     final data = res['data'];
-    return CourierProfile.fromJson(data is Map ? data as Map<String, dynamic> : {});
+    return CourierProfile.fromJson(
+        data is Map ? data as Map<String, dynamic> : {});
   }
 
   /// Onlayn/oflayn holat: PUT /courier/availability
@@ -115,7 +117,8 @@ class OrderService {
   }) async {
     final res = await ApiClient.instance.put('/courier/orders/$id/not-found', {
       'reason_code': reasonCode,
-      if (reasonNote != null && reasonNote.isNotEmpty) 'reason_note': reasonNote,
+      if (reasonNote != null && reasonNote.isNotEmpty)
+        'reason_note': reasonNote,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
     });
@@ -185,6 +188,8 @@ class OrderService {
     String? phone,
     String? vehicleType,
     String? vehicleNumber,
+    double? vehicleCapacityKg,
+    int? maxOrdersPerTrip,
   }) async {
     final res = await ApiClient.instance.put('/courier/profile', {
       'name': name,
@@ -193,8 +198,11 @@ class OrderService {
         'vehicle_type': vehicleType,
       if (vehicleNumber != null && vehicleNumber.isNotEmpty)
         'vehicle_number': vehicleNumber,
+      if (vehicleCapacityKg != null) 'vehicle_capacity_kg': vehicleCapacityKg,
+      if (maxOrdersPerTrip != null) 'max_orders_per_trip': maxOrdersPerTrip,
     });
     final data = res['data'];
-    return CourierProfile.fromJson(data is Map ? data as Map<String, dynamic> : {});
+    return CourierProfile.fromJson(
+        data is Map ? data as Map<String, dynamic> : {});
   }
 }

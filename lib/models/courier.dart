@@ -7,6 +7,8 @@ class CourierProfile {
   final String photo;
   final String vehicleType;
   final String vehicleNumber;
+  final double vehicleCapacityKg;
+  final int maxOrdersPerTrip;
   final bool isOnline;
   final String? shiftStartedAt;
 
@@ -18,6 +20,8 @@ class CourierProfile {
     this.photo = '',
     this.vehicleType = '',
     this.vehicleNumber = '',
+    this.vehicleCapacityKg = 1000,
+    this.maxOrdersPerTrip = 10,
     this.isOnline = false,
     this.shiftStartedAt,
   });
@@ -30,6 +34,9 @@ class CourierProfile {
         photo: (json['photo'] ?? '') as String,
         vehicleType: (json['vehicle_type'] ?? '') as String,
         vehicleNumber: (json['vehicle_number'] ?? '') as String,
+        vehicleCapacityKg:
+            (json['vehicle_capacity_kg'] as num?)?.toDouble() ?? 1000,
+        maxOrdersPerTrip: (json['max_orders_per_trip'] as num?)?.toInt() ?? 10,
         isOnline: (json['is_online'] ?? false) as bool,
         shiftStartedAt: json['shift_started_at'] as String?,
       );
@@ -40,6 +47,8 @@ class CourierProfile {
     String? phone,
     String? vehicleType,
     String? vehicleNumber,
+    double? vehicleCapacityKg,
+    int? maxOrdersPerTrip,
     String? shiftStartedAt,
   }) =>
       CourierProfile(
@@ -50,6 +59,8 @@ class CourierProfile {
         photo: photo,
         vehicleType: vehicleType ?? this.vehicleType,
         vehicleNumber: vehicleNumber ?? this.vehicleNumber,
+        vehicleCapacityKg: vehicleCapacityKg ?? this.vehicleCapacityKg,
+        maxOrdersPerTrip: maxOrdersPerTrip ?? this.maxOrdersPerTrip,
         isOnline: isOnline ?? this.isOnline,
         shiftStartedAt: shiftStartedAt ?? this.shiftStartedAt,
       );

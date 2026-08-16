@@ -34,7 +34,7 @@ class BottomNavBar extends StatelessWidget {
               _NavItem(
                 icon: Icons.local_shipping_outlined,
                 activeIcon: Icons.local_shipping,
-                label: 'Zakazlar',
+                label: 'Reyslar',
                 active: index == 0,
                 onTap: () => onTap(0),
               ),
@@ -86,7 +86,8 @@ class _NavItem extends StatelessWidget {
             // Tarix tab'ida faol holat pill ichida — dizaynga mos
             if (active)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
                 decoration: BoxDecoration(
                   color: AppColors.infoBg,
                   borderRadius: BorderRadius.circular(20),
