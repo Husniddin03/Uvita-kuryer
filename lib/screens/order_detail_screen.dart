@@ -116,7 +116,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Text(_error!, textAlign: TextAlign.center),
               ),
               const SizedBox(height: 16),
-              FilledButton(onPressed: _load, child: const Text('Qayta urinish')),
+              FilledButton(
+                  onPressed: _load, child: const Text('Qayta urinish')),
             ],
           ),
         ),
@@ -214,7 +215,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                     // ── Holat kartasi ──
                     if (isStoreStage)
-                      _StatusCard(
+                      const _StatusCard(
                         icon: Icons.storefront,
                         color: AppColors.warning,
                         bg: AppColors.warningBg,
@@ -223,10 +224,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             'Manzilga borib, buyurtma raqamini ayting va mahsulotlarni qabul qiling.',
                       )
                     else if (isDelivering)
-                      _StatusCard(
+                      const _StatusCard(
                         icon: Icons.local_shipping,
                         color: AppColors.primaryDark,
-                        bg: const Color(0xFF0073E0),
+                        bg: Color(0xFF0073E0),
                         title: 'Yetkazilmoqda — mijozga yo\'ldasiz',
                         text:
                             'Manzilga yetib borgach, quyidagi tugmani bosing.',

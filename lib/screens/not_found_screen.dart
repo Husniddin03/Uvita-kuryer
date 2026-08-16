@@ -155,8 +155,7 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                             TextSpan(
                               children: [
                                 const TextSpan(
-                                  text:
-                                      'Bu — ',
+                                  text: 'Bu — ',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: AppColors.textMain,
@@ -170,10 +169,10 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                                     color: AppColors.textMain,
                                   ),
                                 ),
-                                TextSpan(
+                                const TextSpan(
                                   text:
                                       '. Yana bir muvaffaqiyatsiz urinishdan so\'ng zakaz avtomatik ravishda admin yordamiga yuboriladi.',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
                                     color: AppColors.textMain,
                                   ),
@@ -277,9 +276,8 @@ class _ReasonCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: selected
-                        ? AppColors.primary
-                        : AppColors.outlineVariant,
+                    color:
+                        selected ? AppColors.primary : AppColors.outlineVariant,
                     width: 2,
                   ),
                 ),

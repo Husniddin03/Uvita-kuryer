@@ -150,7 +150,7 @@ class _PinScreenState extends State<PinScreen> {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.infoBg,
                           shape: BoxShape.circle,
                         ),
@@ -338,7 +338,7 @@ class _SuccessModal extends StatelessWidget {
                       child: Container(
                         width: 96,
                         height: 96,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.successBg,
                           shape: BoxShape.circle,
                         ),

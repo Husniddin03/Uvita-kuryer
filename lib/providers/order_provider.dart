@@ -43,8 +43,7 @@ class OrderProvider extends ChangeNotifier {
   int get activeCount => _orders?.length ?? 0;
 
   /// Yangi zakazlar (qabul qilinmagan)
-  List<Order> get newOrders =>
-      (_orders ?? []).where((o) => o.isNew).toList();
+  List<Order> get newOrders => (_orders ?? []).where((o) => o.isNew).toList();
 
   /// Aktiv zakazlar (qabul qilingan, yo'lda) — eng yaqini birinchi.
   /// Masofa/vaqt hisoblanmaganlar oxiriga qo'yiladi.
@@ -88,8 +87,7 @@ class OrderProvider extends ChangeNotifier {
   void _startLocationReporting() {
     _locationTimer?.cancel();
     _locationTimer = Timer.periodic(const Duration(seconds: 20), (_) async {
-      final delivering =
-          (_orders ?? []).where((o) => o.isActive).toList();
+      final delivering = (_orders ?? []).where((o) => o.isActive).toList();
       if (delivering.isEmpty) return;
       // Onlayn ekanligini profil orqali bilmaymiz — aktiv zakaz bor bo'lsa yuboramiz
       try {
@@ -103,7 +101,7 @@ class OrderProvider extends ChangeNotifier {
           orderId: delivering.first.id,
           latitude: pos.latitude,
           longitude: pos.longitude,
-          accuracy: pos.accuracy?.round(),
+          accuracy: pos.accuracy.round(),
         );
       } catch (_) {
         // GPS yo'q yoki tarmoq xatosi — keyingi davrda qayta uriniladi
@@ -141,7 +139,8 @@ class OrderProvider extends ChangeNotifier {
   /// Kuryer joylashuvini oladi (60 soniyada bir marta) — masofa hisoblash uchun.
   Future<void> _fetchCourierPosition() async {
     if (_posFetchedAt != null &&
-        DateTime.now().difference(_posFetchedAt!) < const Duration(seconds: 60)) {
+        DateTime.now().difference(_posFetchedAt!) <
+            const Duration(seconds: 60)) {
       return;
     }
     _posFetchedAt = DateTime.now();

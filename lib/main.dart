@@ -189,21 +189,21 @@ class _SplashScreenState extends State<_SplashScreen>
             final t = _controller.value * _durationSec;
 
             // --- U belgisi o'lchamlari (187x238 asl, aspect saqlanadi) ---
-            final markW = 187 * _markH / 238; // ≈ 71
+            const markW = 187 * _markH / 238; // ≈ 71
             // Harflar: wordmark 85px balandlikda — umumiy koeffitsient bilan
             // kichraytiriladi (baseline saqlanadi, nisbatlar buzilmaydi)
-            final f = _letterH / 85; // _letterH = 38 → f ≈ 0.447
-            final vW = 73 * f, vH = 63 * f;
-            final iW = 36 * f, iH = 85 * f;
-            final tW = 38 * f, tH = 82 * f;
-            final aW = 69 * f, aH = 66 * f;
+            const f = _letterH / 85; // _letterH = 38 → f ≈ 0.447
+            const vW = 73 * f, vH = 63 * f;
+            const iW = 36 * f, iH = 85 * f;
+            const tW = 38 * f, tH = 82 * f;
+            const aW = 69 * f, aH = 66 * f;
 
-            final vLeft = markW + _markGap;
-            final iLeft = vLeft + vW + _letterGap;
-            final tLeft = iLeft + iW + _letterGap;
-            final aLeft = tLeft + tW + _letterGap;
-            final stackW = aLeft + aW;
-            final stackH = _markH;
+            const vLeft = markW + _markGap;
+            const iLeft = vLeft + vW + _letterGap;
+            const tLeft = iLeft + iW + _letterGap;
+            const aLeft = tLeft + tW + _letterGap;
+            const stackW = aLeft + aW;
+            const stackH = _markH;
 
             // --- Mark animatsiyasi ---
             // Pop: 0.05–0.35 (0 → 2.6, overshoot)
@@ -213,7 +213,7 @@ class _SplashScreenState extends State<_SplashScreen>
             final moveT = ((t - 0.35) / 0.70).clamp(0.0, 1.0);
             final moveEase = Curves.easeInOutCubic.transform(moveT);
             final scale = popT < 1.0 ? popScale : 2.6 + (1.0 - 2.6) * moveEase;
-            final centerDx = (stackW - markW) / 2;
+            const centerDx = (stackW - markW) / 2;
             final markDx = centerDx * (1 - moveEase);
             final markOpacity = ((t - 0.03) / 0.15).clamp(0.0, 1.0);
 

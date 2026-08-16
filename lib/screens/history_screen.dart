@@ -92,16 +92,12 @@ class HistoryScreenState extends State<HistoryScreen> {
   /// Bugungi yetkazilganlar soni (yetkazilgan sanadan).
   int _todayCount(List<Order> orders) {
     final now = DateTime.now();
-    return orders
-        .where((o) {
-          final raw = o.deliveredAt ?? o.createdAt;
-          final dt = DateTime.tryParse(raw);
-          if (dt == null) return false;
-          return dt.year == now.year &&
-              dt.month == now.month &&
-              dt.day == now.day;
-        })
-        .length;
+    return orders.where((o) {
+      final raw = o.deliveredAt ?? o.createdAt;
+      final dt = DateTime.tryParse(raw);
+      if (dt == null) return false;
+      return dt.year == now.year && dt.month == now.month && dt.day == now.day;
+    }).length;
   }
 
   @override
@@ -121,8 +117,7 @@ class HistoryScreenState extends State<HistoryScreen> {
             child: AppTopBar(
               name: auth.profile?.name,
               onBellTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (_) => const NotificationsScreen()),
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
               ),
             ),
           ),
@@ -268,12 +263,12 @@ class HistoryScreenState extends State<HistoryScreen> {
                       child: _HistoryItem(order: o),
                     ),
                   if (_filtered(orders).isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32),
                       child: Center(
                         child: Text(
                           'Bu davrda yetkazilgan buyurtma yo\'q',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textSecondary,
@@ -297,8 +292,8 @@ class HistoryScreenState extends State<HistoryScreen> {
                               },
                         style: OutlinedButton.styleFrom(
                           minimumSize: const Size.fromHeight(52),
-                          side: const BorderSide(
-                              color: AppColors.outlineVariant),
+                          side:
+                              const BorderSide(color: AppColors.outlineVariant),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(kButtonRadius),
                           ),

@@ -60,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -80,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
     if (ok == true) {
-      await context.read<AuthProvider>().logout();
+      await auth.logout();
     }
   }
 
@@ -104,6 +105,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       history.value = await OrderService.getSupport();
     } catch (_) {}
+
+    if (!mounted) {
+      category.dispose();
+      message.dispose();
+      sending.dispose();
+      history.dispose();
+      return;
+    }
 
     await showModalBottomSheet<void>(
       context: context,
@@ -325,6 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
     message.dispose();
     sending.dispose();
+    history.dispose();
   }
 
   String _categoryLabel(String code) {
@@ -585,23 +595,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final url = await ApiClient.setBaseUrl(saved);
     controller.dispose();
     if (url == null) {
-      if (!context.mounted) return;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Noto\'g\'ri manzil. Qayta urinib ko\'ring.')),
       );
       return;
     }
-    if (!context.mounted) return;
+    if (!mounted) return;
     setState(() {});
     try {
       await OrderService.getProfile();
-      if (!context.mounted) return;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Server manzili saqlandi: $url')),
       );
     } catch (_) {
-      if (!context.mounted) return;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Manzil saqlandi, lekin serverga ulanib bo\'lmadi.'),
