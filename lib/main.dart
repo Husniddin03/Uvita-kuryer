@@ -71,8 +71,9 @@ class UvitaCourierApp extends StatelessWidget {
 }
 
 /// Sessiya holatiga qarab kirish yoki asosiy panelni ko'rsatadi.
-/// Splash minimum [minSplash] davomida ko'rsatiladi — 'u' animatsiyasi
-/// to'liq o'ynashi uchun (tez restore bo'lsa ham kesilmaydi).
+/// Splash animatsiyasi TO'LIQ o'ynab tugamaguncha ushlab turadi —
+/// sekin ishga tushganda ham 'u' pop → kichiklashuv → 'vita' harflar
+/// ketma-ketligi kesilmaydi (sahifa erta ochilmaydi).
 class _RootGate extends StatefulWidget {
   const _RootGate();
 
@@ -81,16 +82,12 @@ class _RootGate extends StatefulWidget {
 }
 
 class _RootGateState extends State<_RootGate> {
-  static const Duration minSplash = Duration(milliseconds: 2400);
-  final DateTime _startedAt = DateTime.now();
+  /// Splash animatsiyasi tugadimi (onDone callback orqali belgilanadi).
+  bool _splashDone = false;
 
   @override
   void initState() {
     super.initState();
-    // minSplash vaqt o'tgach rebuild — splash'ni almashtirish uchun
-    Future.delayed(minSplash, () {
-      if (mounted) setState(() {});
-    });
     // Cold-start'da notification bosilgan bo'lsa — birinchi frame'dan keyin ochamiz
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationService.consumePending();
@@ -101,10 +98,13 @@ class _RootGateState extends State<_RootGate> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final ready = auth.status != AuthStatus.unknown;
-    final elapsed = DateTime.now().difference(_startedAt);
 
-    if (!ready || elapsed < minSplash) {
-      return const _SplashScreen();
+    if (!ready || !_splashDone) {
+      return _SplashScreen(
+        onDone: () {
+          if (mounted) setState(() => _splashDone = true);
+        },
+      );
     }
 
     if (!auth.isAuthenticated) {
@@ -126,7 +126,10 @@ class _RootGateState extends State<_RootGate> {
 /// 3. Shu paytda 'vita' harflari o'ngdan ketma-ket suzib kiradi
 /// 4. Pastda KURYER yozuvi paydo bo'ladi
 class _SplashScreen extends StatefulWidget {
-  const _SplashScreen();
+  const _SplashScreen({this.onDone});
+
+  /// Animatsiya tugaganda chaqiriladi — RootGate keyingi sahifaga o'tadi.
+  final VoidCallback? onDone;
 
   @override
   State<_SplashScreen> createState() => _SplashScreenState();
@@ -151,7 +154,13 @@ class _SplashScreenState extends State<_SplashScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2400),
-    )..forward();
+    );
+    // Animatsiya to'liq tugagach RootGate'ga xabar beramiz — shunda
+    // sekin telefonlarda ham sahifa erta ochilib ketmaydi.
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) widget.onDone?.call();
+    });
+    _controller.forward();
   }
 
   @override
