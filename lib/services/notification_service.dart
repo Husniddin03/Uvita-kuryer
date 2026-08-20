@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../models/order.dart';
@@ -20,7 +21,8 @@ class NotificationService {
 
   static const String _channelId = 'new_orders';
   static const String _channelName = 'Yangi buyurtmalar';
-  static const String _channelDesc = 'Yangi buyurtma biriktirilganda xabar beriladi';
+  static const String _channelDesc =
+      'Yangi buyurtma biriktirilganda xabar beriladi';
 
   static bool _initialized = false;
 
@@ -59,10 +61,13 @@ class NotificationService {
 
   /// Android 13+ da bildirishnoma ruxsatini so'raydi.
   static Future<bool> requestPermission() async {
+    // Web buildda buyurtma xabari AlertStack orqali ilova ichida ko‘rsatiladi.
+    // Androidga xos implementation webda mavjud emas va `show()` chaqiruvi
+    // brauzer ruxsatisiz Bad state xatosini chiqaradi.
+    if (kIsWeb) return false;
     await init();
-    final impl = _plugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final impl = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     if (impl == null) return true;
     final granted = await impl.requestNotificationsPermission();
     return granted ?? false;
@@ -92,6 +97,7 @@ class NotificationService {
     required String body,
     bool sound = true,
   }) async {
+    if (kIsWeb) return;
     await init();
 
     final details = AndroidNotificationDetails(
@@ -116,8 +122,9 @@ class NotificationService {
   }
 
   /// 62100 -> "62 100"
-  static String _fmtMoney(int v) => v.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]} ');
+  static String _fmtMoney(int v) => v
+      .toString()
+      .replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]} ');
 
   static int? _pendingOrderId;
 
