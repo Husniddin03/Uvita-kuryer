@@ -1,108 +1,59 @@
-# Uvita — Kuryer ilovasi (Flutter / Android)
+# Uvita Courier
 
-Uvita Market oziq-ovqat do'koni uchun kuryer mobil ilovasi. Buyurtmalarni
-qabul qilish, yetkazish, tarix va profil boshqaruvi — barchasi bitta ilovada.
+Uvita omborsiz marketplace'i uchun Flutter courier ilovasi. Courier yukni seller
+manzilidan olib, to'g'ridan-to'g'ri xaridorga yetkazadi.
 
-## 🚀 Ishga tushirish
+## Asosiy oqim
 
-### 1. Flutter SDK o'rnatish
+1. Courier profil va transport imkoniyatlarini ko'radi.
+2. Og'irlik, hajm, masofa, yo'nalish va qarz holatiga mos trip offer oladi.
+3. Tripni qabul qiladi; pickupgacha default 1 soat ichida sabab bilan bekor qilishi mumkin.
+4. Sellerda miqdor, sifat/brak, qadoq va tashish shartini tekshiradi.
+5. Handover tasdiqlangach order yo'lda holatiga o'tadi.
+6. Customerdan aniq naqd summani oladi.
+7. Customer SMS PIN bilan deliveryni tasdiqlaydi.
+8. Courier cash liability va earning ilovada ko'rinadi.
+9. Tripdan keyin pul topshirish so'rovi yuboradi.
 
-> **Talab:** Flutter **3.27+** (kod `Color.withValues` va `DialogThemeData`
-> API'laridan foydalanadi). So'nggi stable versiyani o'rnating.
+Kamida 90% naqd pul topshirilmasa yangi trip bloklanadi. Qolgan qarz default 3 kun
+ichida yopiladi. Qisman deliveryda actual quantity, sabab va media dalil majburiy.
+
+## Texnologiyalar
+
+- Flutter/Dart
+- `provider`
+- `http`
+- `flutter_map` va OpenStreetMap
+- `geolocator`
+- Firebase Messaging va local notifications
+
+## Ishga tushirish
+
+Flutter 3.27+ tavsiya qilinadi.
 
 ```bash
-# Flutter'ni yuklab oling: https://docs.flutter.dev/get-started/install/linux
-# (masalan: /home/user/flutter'ga oching)
-
-export PATH="$PATH:$HOME/flutter/bin"
-flutter doctor   # Android toolchain'ni tekshiring
-```
-
-### 2. Loyihani tayyorlash
-
-```bash
-cd Uvita_mobile
 flutter pub get
+flutter run
 ```
 
-> **Eslatma:** `android/` katalogi qo'lda yozilgan. Agar `flutter create` bilan
-> loyiha yaratilgan bo'lsa va gradle xatosi bersa:
-> ```bash
-> flutter create . --platforms android
-> ```
-> — bu `android/`'dagi yetishmayotgan fayllarni to'ldiradi (mavjudlarini ustiga yozmaydi).
+API manzili `lib/config.dart` yoki amaldagi environment konfiguratsiyasidan olinadi.
+Android emulator uchun odatda `http://10.0.2.2:8000/api`, haqiqiy qurilmada HTTPS
+yoki lokal tarmoq manzili ishlatiladi.
 
-### 3. Qurilma/emulatorda ishga tushirish
+## Tekshiruv
 
 ```bash
-# Emulator:
-flutter run
-
-# APK build:
+flutter analyze
+flutter test
 flutter build apk --debug
-flutter build apk --release
 ```
 
-APK manzili: `build/app/outputs/flutter-apk/app-debug.apk` (yoki `app-release.apk`).
+## Xavfsizlik
 
-## ⚙️ API konfiguratsiyasi
+- Token logga chiqarilmaydi.
+- Courier faqat o'z assigned trip/delivery ma'lumotini ko'radi.
+- GPS faqat active trip davomida minimal zarur chastotada yuboriladi.
+- PIN clientda tekshirilmaydi; yakuniy tasdiq backendda.
+- Offline/retry duplicate pickup, delivery yoki ledger yozuvi yaratmasligi kerak.
 
-`lib/config.dart` faylida:
-
-```dart
-static const String apiBase = 'http://10.0.2.2:8000/api';
-```
-
-- **Android emulator** → `http://10.0.2.2:8000/api` (localhost'ga ulanadi)
-- **Haqiqiy qurilma** → kompyuterning LAN IP-manzili:
-  ```dart
-  static const String apiBase = 'http://192.168.1.10:8000/api';
-  ```
-
-Backend `Uvita_backend` da `php artisan serve --host=0.0.0.0 --port=8000`
-yoki docker orqali ishga tushirilgan bo'lishi kerak.
-
-## 📱 Imkoniyatlar
-
-- **Kirish** — email + parol (faqat kuryerlar; backend `role.courier` ni tekshiradi)
-- **Bosh sahifa** — statistika (yetkazilgan / faol / muvaffaqiyat / topilmadi),
-  faol buyurtmalar ro'yxati, pull-to-refresh, ovoz tugmasi
-- **Yangi buyurtma signali** — har 30 soniyada avtomatik yangilanadi; yangi
-  buyurtma tushsa **ovozli signal** + **banner** (20 soniya ichida avtomatik yopiladi)
-- **Buyurtma tafsiloti** — holat hero, manzil + **OSM xaritasi**, mijoz telefoni
-  (qo'ng'iroq qilish), mahsulotlar, qabul qilish / yetkazildi / topilmadi
-- **Xarita** — OSM (bepul), backend'dagi `lat/lng` yoki Nominatim geokodlash,
-  "Mening joylashuvim" (geolokatsiya) + OSRM marshrut/uzoqlik
-- **Tarix** — sahifalangan yetkazilgan buyurtmalar
-- **Profil** — shaxsiy ma'lumotlar, statistika, muvaffaqiyat darajasi, chiqish
-
-## 🧩 Texnologiyalar
-
-| Paket | Vazifasi |
-|---|---|
-| `flutter_map` + `latlong2` | OSM xarita (bepul, kalitsiz) |
-| `http` | API so'rovlar |
-| `shared_preferences` | Token/sessiya saqlash |
-| `geolocator` | "Mening joylashuvim" |
-| `url_launcher` | Qo'ng'iroq qilish, xarita ochish |
-| `provider` | Holat boshqaruvi |
-
-## 🎨 Dizayn
-
-Forest/lime palitrasi — veb-versiya (React) bilan bir xil:
-`#0A2B1D` (forest-900), `#104528` (forest-700), `#C5F255` (leaf-400),
-`#F6F8F6` (fon).
-
-## 📁 Tuzilma
-
-```
-lib/
-  main.dart              — ilova kirish nuqtasi
-  config.dart            — API URL va xarita sozlamalari
-  theme.dart             — ranglar va dizayn tizimi
-  models/                — Order, CourierProfile, CourierStats
-  services/              — ApiClient, AuthService, OrderService, GeocodeService, ChimeService
-  providers/             — AuthProvider, OrderProvider (polling + signal)
-  screens/               — Login, MainShell, Home, OrderDetail, History, Profile
-  widgets/               — OrderCard, OrderBadge, AlertStack, DeliveryMap
-```
+Yagona biznes manba: `../uvita_backend/LIFECYCLE.md`.
